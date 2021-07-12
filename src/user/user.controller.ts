@@ -19,10 +19,11 @@ import { Response } from 'express';
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
   @Post()
   @ApiOperation({
-    description: '创建新用户',
+    deprecated: false,
+    summary: '创建新用户',
+    parameters: [],
   })
   @ApiBody({ type: CreateUserDto })
   @ApiOkResponse({
