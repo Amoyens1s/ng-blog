@@ -20,11 +20,7 @@ import { Response } from 'express';
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @Post()
-  @ApiOperation({
-    deprecated: false,
-    summary: '创建新用户',
-    parameters: [],
-  })
+  @ApiOperation({ summary: '创建新用户' })
   @ApiBody({ type: CreateUserDto })
   @ApiOkResponse({
     description: '新用户创建成功',
@@ -35,26 +31,27 @@ export class UserController {
   }
 
   @Get()
-  @ApiOperation({
-    description: '获取全部用户',
-  })
+  @ApiOperation({ summary: '获取全部用户' })
   async findAll(@Res() res: Response) {
     const result = await this.userService.findAll();
     return res.status(HttpStatus.OK).json(result);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  @ApiOperation({ summary: '获取指定用户数据' })
+  async findOne(@Param('id') id: string) {
+    return this.userService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  @ApiOperation({ summary: '更新指定用户' })
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  @ApiOperation({ summary: '删除指定用户' })
+  async remove(@Param('id') id: string) {
+    return this.userService.remove(id);
   }
 }
