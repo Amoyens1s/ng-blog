@@ -40,7 +40,7 @@
 }
 .swagger-ui table tbody tr td:first-of-type {
   vertical-align: middle;
-  padding: 10px 0 0 0;
+  padding: 10px 0 0;
 }
 .swagger-ui .response-col_links {
   min-width: 16em;
