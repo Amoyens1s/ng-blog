@@ -9,12 +9,12 @@ import {
   Res,
 } from '@nestjs/common';
 import { ApiBody, ApiOkResponse } from '@nestjs/swagger';
+import { Response } from 'express';
 import {
   CreateArticleDTO,
   createArticleResponse,
-} from 'src/article/dto/create-article.dto';
-import { ArticleService } from 'src/article/service/article.service';
-import { Response } from 'express';
+} from '../dto/create-article.dto';
+import { ArticleService } from '../service/article.service';
 
 @Controller('article')
 export class ArticleController {
