@@ -10,6 +10,14 @@
     "sourceMap": true,
     "baseUrl": "./",
     "incremental": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "paths": {
+      "@test/test": [
+        "libs/test/src"
+      ],
+      "@test/test/*": [
+        "libs/test/src/*"
+      ]
+    }
   }
 }

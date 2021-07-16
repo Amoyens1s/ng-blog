@@ -2,15 +2,29 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "assets": ["../assets/**/*"],
+    "assets": [
+      "../assets/**/*"
+    ],
     "plugins": [
       {
         "name": "@nestjs/swagger/plugin",
         "options": {
           "classValidatorShim": false,
           "introspectComments": true
-        } 
+        }
       }
-    ]
+    ],
+    "webpack": true
+  },
+  "projects": {
+    "test": {
+      "type": "library",
+      "root": "libs/test",
+      "entryFile": "index",
+      "sourceRoot": "libs/test/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/test/tsconfig.lib.json"
+      }
+    }
   }
 }

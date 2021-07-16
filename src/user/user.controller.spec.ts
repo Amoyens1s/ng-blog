@@ -1,24 +1,30 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { response } from '@test/test';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { Response } from 'express';
 
-describe('UserController', () => {
+describe('AppController', () => {
   let controller: UserController;
-  let service: UserService;
-  const res: any = '';
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const app: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
-      providers: [UserService],
+      providers: [
+        {
+          provide: UserService,
+          useValue: {
+            findAll: jest.fn().mockResolvedValue([]),
+          },
+        },
+      ],
     }).compile();
 
-    controller = module.get<UserController>(UserController);
-    service = module.get<UserService>(UserService);
+    controller = app.get<UserController>(UserController);
   });
 
-  it('should be defined', async () => {
-    expect(await controller.findAll(res)).toBeDefined();
+  describe('root', () => {
+    it('should return "Hello World!"', async () => {
+      expect(await controller.findAll(response)).toStrictEqual([]);
+    });
   });
 });
