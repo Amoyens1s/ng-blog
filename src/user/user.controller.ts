@@ -8,12 +8,14 @@ import {
   Delete,
   HttpStatus,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('用户模块')
 @Controller('user')
@@ -53,5 +55,11 @@ export class UserController {
   @ApiOperation({ summary: '删除指定用户' })
   async remove(@Param('id') id: string) {
     return this.userService.remove(id);
+  }
+
+  @Get('email/:email')
+  @ApiOperation({ summary: '获取指定用户数据' })
+  async findOneByEmail(@Param('email') email: string) {
+    return this.userService.findOneByEmail(email);
   }
 }
