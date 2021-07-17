@@ -21,6 +21,24 @@ export class UserService {
     return this.userModel.findById(id).exec();
   }
 
+  async findOneByEmail(email: string) {
+    return this.userModel
+      .find()
+      .exec()
+      .then((userList) => {
+        return userList.find((user) => user.email === email);
+      });
+  }
+
+  async findOneByUsername(username: string) {
+    return this.userModel
+      .find()
+      .exec()
+      .then((userList) => {
+        return userList.find((user) => user.username === username);
+      });
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto) {
     return this.userModel.findByIdAndUpdate(id, updateUserDto);
   }
