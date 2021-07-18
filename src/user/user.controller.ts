@@ -60,6 +60,6 @@ export class UserController {
   @Get('email/:email')
   @ApiOperation({ summary: '获取指定用户数据' })
   async findOneByEmail(@Param('email') email: string) {
-    return this.userService.findOneByEmail(email);
+    return this.userService.findByEmail(email);
   }
 }

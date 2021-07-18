@@ -21,7 +21,7 @@ export class UserService {
     return this.userModel.findById(id).exec();
   }
 
-  async findOneByEmail(email: string) {
+  async findByEmail(email: string) {
     return this.userModel
       .find()
       .exec()
@@ -30,12 +30,21 @@ export class UserService {
       });
   }
 
-  async findOneByUsername(username: string) {
+  async findByUsername(username: string) {
     return this.userModel
       .find()
       .exec()
       .then((userList) => {
         return userList.find((user) => user.username === username);
+      });
+  }
+
+  async findByPhoneNumber(phoneNumber: string) {
+    return this.userModel
+      .find()
+      .exec()
+      .then((userList) => {
+        return userList.find((user) => user.phone === phoneNumber);
       });
   }
 
