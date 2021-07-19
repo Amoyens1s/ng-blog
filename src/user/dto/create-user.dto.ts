@@ -26,9 +26,9 @@ export class CreateUserDto {
   @ApiProperty({
     description: '绑定手机号，唯一标识，可用于登录，可修改',
     example: '00000000000',
-    type: 'string',
+    type: 'number',
   })
-  readonly phone?: string;
+  readonly phone?: number;
 
   @ApiProperty({
     description: '账号创建日期，不可修改',

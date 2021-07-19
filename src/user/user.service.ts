@@ -39,7 +39,7 @@ export class UserService {
       });
   }
 
-  async findByPhoneNumber(phoneNumber: string) {
+  async findByPhoneNumber(phoneNumber: number) {
     return this.userModel
       .find()
       .exec()
