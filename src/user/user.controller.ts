@@ -8,14 +8,20 @@ import {
   Delete,
   HttpStatus,
   Res,
-  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Response } from 'express';
-import { AuthGuard } from '@nestjs/passport';
+import { UserDetailDto } from './dto/user-detail.dto';
 
 @ApiTags('用户模块')
 @Controller('user')
@@ -40,9 +46,23 @@ export class UserController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: '获取指定用户数据' })
-  async findOne(@Param('id') id: string) {
-    return this.userService.findOne(id);
+  @ApiOperation({ summary: '通过ID获取指定用户数据' })
+  @ApiOkResponse({
+    description: '用户数据，不包含password字段',
+    type: UserDetailDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: '查询不到指定用户',
+  })
+  async findOne(@Res() res: Response, @Param('id') id: string) {
+    const result = await this.userService.findOne(id);
+    return res.status(HttpStatus.OK).json({
+      _id: result._id,
+      username: result.username,
+      email: result.email,
+      phone: result.phone || null,
+      createDate: result.createDate,
+    });
   }
 
   @Patch(':id')
