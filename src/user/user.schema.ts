@@ -34,6 +34,12 @@ export class User extends Document {
     type: String,
   })
   createDate: string;
+
+  @Prop({
+    required: true,
+    type: String,
+  })
+  permission: string[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
