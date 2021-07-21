@@ -8,6 +8,8 @@ import {
   Delete,
   HttpStatus,
   Res,
+  HttpException,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,13 +17,13 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import {
   ApiBody,
   ApiInternalServerErrorResponse,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { UserDetailDto } from './dto/user-detail.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('用户模块')
 @Controller('user')
@@ -39,6 +41,7 @@ export class UserController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '获取全部用户' })
   async findAll(@Res() res: Response) {
     const result = await this.userService.findAll();

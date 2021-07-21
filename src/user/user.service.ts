@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -18,11 +18,15 @@ export class UserService {
   }
 
   async findOne(id: string) {
-    return this.userModel.findById(id).exec();
+    try {
+      return await this.userModel.findById(id).exec();
+    } catch (error) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
   }
 
   async findByEmail(email: string) {
-    return this.userModel
+    return await this.userModel
       .find()
       .exec()
       .then((userList) => {
@@ -31,7 +35,7 @@ export class UserService {
   }
 
   async findByUsername(username: string) {
-    return this.userModel
+    return await this.userModel
       .find()
       .exec()
       .then((userList) => {
@@ -40,7 +44,7 @@ export class UserService {
   }
 
   async findByPhoneNumber(phoneNumber: number) {
-    return this.userModel
+    return await this.userModel
       .find()
       .exec()
       .then((userList) => {
