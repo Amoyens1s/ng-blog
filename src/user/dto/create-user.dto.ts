@@ -36,4 +36,6 @@ export class CreateUserDto {
     type: 'string',
   })
   readonly createDate: string;
+
+  readonly permission: string[];
 }
