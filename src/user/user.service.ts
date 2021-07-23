@@ -26,7 +26,7 @@ export class UserService {
   }
 
   async findByEmail(email: string) {
-    return await this.userModel
+    return this.userModel
       .find()
       .exec()
       .then((userList) => {
@@ -35,7 +35,7 @@ export class UserService {
   }
 
   async findByUsername(username: string) {
-    return await this.userModel
+    return this.userModel
       .find()
       .exec()
       .then((userList) => {
@@ -44,7 +44,7 @@ export class UserService {
   }
 
   async findByPhoneNumber(phoneNumber: number) {
-    return await this.userModel
+    return this.userModel
       .find()
       .exec()
       .then((userList) => {
