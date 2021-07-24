@@ -35,7 +35,6 @@ describe('AuthService', () => {
           provide: UserService,
           useValue: {
             findByEmail: jest.fn().mockResolvedValue(testData),
-            findByUsername: jest.fn().mockResolvedValue(testData),
             findByPhoneNumber: jest.fn().mockResolvedValue(testData),
           },
         },
@@ -55,21 +54,8 @@ describe('AuthService', () => {
     expect(res._id).toEqual(testData._id);
   });
 
-  it('用户名登录，应当成功', async () => {
-    const res = await service.validateUser(
-      testData.username,
-      testData.password,
-    );
-    expect(res._id).toEqual(testData._id);
-  });
-
-  it('错误长度手机号，应当失败', async () => {
-    const res = await service.validateUser(123456789, testData.password);
-    expect(res).toEqual(null);
-  });
-
   it('生成token', async () => {
-    const res = await service.login(testData);
-    expect(res.access_token).toBeTruthy();
+    const res = await service.login(testData, 10);
+    expect(res).toBeTruthy();
   });
 });

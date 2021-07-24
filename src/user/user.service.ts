@@ -1,15 +1,47 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  OnModuleInit,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.schema';
+import { decode } from 'js-base64';
+import { remove } from 'lodash';
 
 @Injectable()
-export class UserService {
+export class UserService implements OnModuleInit {
   constructor(@InjectModel('user') private readonly userModel: Model<User>) {}
 
+  onModuleInit() {
+    setInterval(() => {
+      this.removeInvalidToken();
+    }, 5000);
+  }
+
+  async removeInvalidToken() {
+    const date = new Date().getTime();
+    const userList = await this.findAll();
+    const validToken = [];
+    userList.map(async (user) => {
+      user.token.forEach((token) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const [header, payload, signature] = token.split('.');
+        const payloads = JSON.parse(decode(payload));
+        const exp = payloads.exp * 1000;
+        if (date < exp) {
+          validToken.push(token);
+        }
+      });
+      await this.userModel.findByIdAndUpdate(user._id, { token: validToken });
+    });
+  }
+
   async create(user: CreateUserDto) {
+    user.token = [];
     return new this.userModel(user).save();
   }
 
@@ -34,15 +66,6 @@ export class UserService {
       });
   }
 
-  async findByUsername(username: string) {
-    return this.userModel
-      .find()
-      .exec()
-      .then((userList) => {
-        return userList.find((user) => user.username === username);
-      });
-  }
-
   async findByPhoneNumber(phoneNumber: number) {
     return this.userModel
       .find()
@@ -54,6 +77,25 @@ export class UserService {
 
   async update(id: string, updateUserDto: UpdateUserDto) {
     return this.userModel.findByIdAndUpdate(id, updateUserDto);
+  }
+
+  async addToken(userId: string, token: string) {
+    const user = await this.findOne(userId);
+    user.token.push(token);
+    return this.userModel.findByIdAndUpdate(userId, { token: user.token });
+  }
+
+  async removeToken(userId: string, token: string) {
+    const user = await this.userModel.findById(userId).exec();
+    if (user) {
+      remove(user.token, (t) => t === token);
+      await this.userModel.findByIdAndUpdate(userId, { token: user.token });
+    } else {
+      throw new HttpException(
+        'Internal Server Error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async remove(id: string) {

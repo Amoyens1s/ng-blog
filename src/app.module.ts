@@ -11,6 +11,8 @@ import { AuthModule } from './auth/auth.module';
   imports: [
     MongooseModule.forRoot('mongodb://localhost:27017/blog', {
       useNewUrlParser: true,
+      useFindAndModify: false,
+      useCreateIndex: true,
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, 'assets'),

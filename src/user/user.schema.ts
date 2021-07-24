@@ -40,6 +40,12 @@ export class User extends Document {
     type: Array,
   })
   permission: string[];
+
+  @Prop({
+    required: false,
+    type: Array,
+  })
+  token: string[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

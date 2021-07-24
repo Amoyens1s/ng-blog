@@ -3,7 +3,6 @@ import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../user/user.schema';
 
-const email_reg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
 @Injectable()
 export class AuthService {
   constructor(
@@ -13,20 +12,15 @@ export class AuthService {
 
   async validateUser(
     usernameField: string | number,
-    pass: string,
+    passwordField: string,
   ): Promise<any> {
     let user: User;
     if (typeof usernameField === 'string') {
-      user = email_reg.test(usernameField)
-        ? await this.userService.findByEmail(usernameField)
-        : await this.userService.findByUsername(usernameField);
-    } else if (
-      typeof usernameField === 'number' &&
-      usernameField.toString().length === 11
-    ) {
+      user = await this.userService.findByEmail(usernameField);
+    } else if (typeof usernameField === 'number') {
       user = await this.userService.findByPhoneNumber(usernameField);
     }
-    if (user && user.password === pass) {
+    if (user && user.password === passwordField) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
       return result;
@@ -34,11 +28,21 @@ export class AuthService {
     return null;
   }
 
-  async login(user: User) {
-    console.log(user);
+  async login(user: User, expireTime?: number) {
     const payload = { permission: user.permission, id: user._id };
+    const token = this.jwtService.sign(payload, {
+      expiresIn: expireTime,
+    });
+    this.userService.addToken(user._id, token);
     return {
-      access_token: this.jwtService.sign(payload),
+      token: token,
     };
+  }
+
+  async logout(userId: string, request: { headers: { authorization: any } }) {
+    const authorization = request.headers.authorization;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [type, token] = authorization.split(' ');
+    await this.userService.removeToken(userId, token);
   }
 }
