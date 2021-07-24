@@ -17,6 +17,12 @@
       ],
       "@test/test/*": [
         "libs/test/src/*"
+      ],
+      "@tools": [
+        "libs/tools/src"
+      ],
+      "@tools/interface": [
+        "libs/tools/src/interface"
       ]
     }
   }

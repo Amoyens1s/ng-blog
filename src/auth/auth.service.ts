@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../user/user.schema';
+import { encodePayload, generateHash, parseToken } from '@tools';
 
 @Injectable()
 export class AuthService {
@@ -29,14 +30,14 @@ export class AuthService {
   }
 
   async login(user: User, expireTime?: number) {
-    const payload = { permission: user.permission, id: user._id };
-    const token = this.jwtService.sign(payload, {
-      expiresIn: expireTime,
-    });
-    this.userService.addToken(user._id, token);
-    return {
-      token: token,
-    };
+    const hash = generateHash();
+    const token = this.jwtService.sign(
+      { permission: user.permission, id: user._id, hash: hash },
+      { expiresIn: expireTime },
+    );
+    const payload = parseToken(token);
+    this.userService.addToken(user._id, encodePayload(payload));
+    return { token: token };
   }
 
   async logout(userId: string, request: { headers: { authorization: any } }) {
