@@ -37,5 +37,17 @@ export class CreateUserDto {
   })
   readonly createDate: string;
 
+  @ApiProperty({
+    description: '用户权限',
+    example: ['master'],
+    type: 'Array',
+  })
   readonly permission: string[];
+
+  @ApiProperty({
+    description: '有效令牌',
+    example: [],
+    type: 'Array',
+  })
+  public token?: string[];
 }
