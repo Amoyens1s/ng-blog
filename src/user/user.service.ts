@@ -11,6 +11,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.schema';
 import { decode } from 'js-base64';
 import { remove } from 'lodash';
+import { decodePayload } from '@tools';
 
 @Injectable()
 export class UserService implements OnModuleInit {
@@ -28,11 +29,8 @@ export class UserService implements OnModuleInit {
     const validToken = [];
     userList.map(async (user) => {
       user.token.forEach((token) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const [header, payload, signature] = token.split('.');
-        const payloads = JSON.parse(decode(payload));
-        const exp = payloads.exp * 1000;
-        if (date < exp) {
+        const payload = decodePayload(token);
+        if (date < payload.exp) {
           validToken.push(token);
         }
       });
