@@ -1,7 +1,10 @@
-export enum PERMISSIONS {
-  MASTER = 'master',
-  ADMIN = 'admin',
-  READ = 'read',
-  WRITE = 'write',
-  COMMENT = 'comment',
+/**
+ * Permissions
+ */
+export enum Roles {
+  Master = 'master',
+  Admin = 'admin',
+  Editor = 'editor',
+  Writer = 'writer',
+  Reader = 'reader',
 }
