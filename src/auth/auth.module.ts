@@ -6,7 +6,6 @@ import { AuthService } from './auth.service';
 import { jwtConstants } from './constants';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
-import { PermissionStrategy } from './strategies/permission.strategy';
 import { AuthController } from './auth.controller';
 
 @Module({
@@ -17,7 +16,7 @@ import { AuthController } from './auth.controller';
       secret: jwtConstants.secret,
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, PermissionStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
   exports: [AuthService],
   controllers: [AuthController],
 })

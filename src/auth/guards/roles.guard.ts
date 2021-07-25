@@ -1,6 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { decode } from 'js-base64';
+import { parseToken } from '@tools';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -14,9 +14,7 @@ export class RolesGuard implements CanActivate {
     const user = request.headers.authorization;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [type, token] = user.split(' ');
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [header, payload, signature] = token.split('.');
-    const permissions = JSON.parse(decode(payload)).permission;
+    const permissions = parseToken(token).permission;
     if (permissions.includes('master')) {
       return true;
     }
