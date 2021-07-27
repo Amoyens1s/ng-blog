@@ -39,7 +39,7 @@ export class User extends Document {
     required: true,
     type: Array,
   })
-  permission: string[];
+  role: string;
 
   @Prop({
     required: false,

@@ -2,7 +2,7 @@ export interface Payload {
   /**
    * 用户权限
    */
-  permission: string[];
+  role: string;
   /**
    * 用户ID
    */
