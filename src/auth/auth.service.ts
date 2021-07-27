@@ -32,7 +32,7 @@ export class AuthService {
   async login(user: User, expireTime?: number) {
     const hash = generateHash();
     const token = this.jwtService.sign(
-      { permission: user.permission, id: user._id, hash: hash },
+      { role: user.role, id: user._id, hash: hash },
       { expiresIn: expireTime },
     );
     const payload = parseToken(token);

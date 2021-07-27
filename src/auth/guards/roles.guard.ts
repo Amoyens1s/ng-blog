@@ -14,14 +14,11 @@ export class RolesGuard implements CanActivate {
     const user = request.headers.authorization;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [type, token] = user.split(' ');
-    const permissions = parseToken(token).permission;
-    if (permissions.includes('master')) {
+    const role = parseToken(token).role;
+    if (role === 'master') {
       return true;
     }
-    if (!roles.includes('master') && permissions.includes('admin')) {
-      return true;
-    }
-    if (permissions.includes(roles[0])) {
+    if (role === roles[0]) {
       return true;
     }
     return false;
